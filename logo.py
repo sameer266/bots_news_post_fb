@@ -72,7 +72,7 @@ def post_news_with_image_to_facebook():
         
         # Wait for 5 minutes before retrying
         retries += 1
-        time.sleep(300)
+        time.sleep(60)
 
 if __name__ == "__main__":
     post_news_with_image_to_facebook()
