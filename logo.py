@@ -56,8 +56,8 @@ def post_news_with_image_to_facebook():
     else:
         print("No news articles found")
 
-# Schedule the task every 3 hours
-schedule.every(3).hours.do(post_news_with_image_to_facebook)
+# Schedule the task every 3 minutes
+schedule.every(3).minutes.do(post_news_with_image_to_facebook)
 
 print("Starting the scheduler...")
 
