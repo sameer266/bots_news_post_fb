@@ -1,15 +1,31 @@
 import requests
 import facebook as fb
-import schedule
-import time
 import os
+import json
 
 # Configuration
 news_api_key = os.getenv("NEWS_API_KEY")
 facebook_access_token = os.getenv("FACEBOOK_ACCESS_TOKEN")
 news_api_url = f"https://newsdata.io/api/1/news?apikey={news_api_key}&q=Nepal&country=np&language=en,ne&category=business,crime,education,politics,tourism"
 graph = fb.GraphAPI(facebook_access_token)
-posted_urls = set()  # Set to keep track of posted article URLs
+posted_urls_file = "posted_urls.json"
+
+# Load posted URLs from file
+def load_posted_urls():
+    if os.path.exists(posted_urls_file):
+        with open(posted_urls_file, "r") as file:
+            try:
+                return set(json.load(file))
+            except json.JSONDecodeError:
+                return set()
+    return set()
+
+# Save posted URLs to file
+def save_posted_urls(urls):
+    with open(posted_urls_file, "w") as file:
+        json.dump(list(urls), file)
+
+posted_urls = load_posted_urls()
 
 def fetch_latest_news():
     response = requests.get(news_api_url)
@@ -47,6 +63,7 @@ def post_news_with_image_to_facebook():
                     graph.put_photo(image=image_data, message=message)
                     print("Successfully posted the latest news with image to Facebook")
                     posted_urls.add(url)  # Add the URL to the set of posted URLs
+                    save_posted_urls(posted_urls)  # Save the updated set of posted URLs
                 except fb.GraphAPIError as e:
                     print(f"An error occurred: {e}")
             else:
@@ -56,12 +73,5 @@ def post_news_with_image_to_facebook():
     else:
         print("No news articles found")
 
-# Schedule the task every 3 minutes
-schedule.every(3).minutes.do(post_news_with_image_to_facebook)
-
-print("Starting the scheduler...")
-
-# Run the scheduler
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+if __name__ == "__main__":
+    post_news_with_image_to_facebook()
