@@ -11,12 +11,14 @@ news_api_url = f"https://newsdata.io/api/1/news?apikey={news_api_key}&q=Nepal&co
 graph = fb.GraphAPI(facebook_access_token)
 posted_urls_file = 'posted_urls.json'
 
+# Ensure the JSON file exists
+if not os.path.exists(posted_urls_file):
+    with open(posted_urls_file, 'w') as f:
+        json.dump([], f)
+
 # Load posted URLs from file
-if os.path.exists(posted_urls_file):
-    with open(posted_urls_file, 'r') as f:
-        posted_urls = set(json.load(f))
-else:
-    posted_urls = set()
+with open(posted_urls_file, 'r') as f:
+    posted_urls = set(json.load(f))
 
 def fetch_latest_news():
     response = requests.get(news_api_url)
