@@ -18,6 +18,14 @@ jobs:
       with:
         python-version: '3.9'
 
+    - name: Restore posted URLs
+      id: restore-posted-urls
+      uses: actions/download-artifact@v2
+      with:
+        name: posted_urls
+        path: posted_urls.json
+      continue-on-error: true
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -29,3 +37,10 @@ jobs:
         FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
       run: |
         python logo.py
+
+    - name: Upload posted URLs
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: posted_urls
+        path: posted_urls.json
