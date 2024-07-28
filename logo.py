@@ -18,7 +18,10 @@ if not os.path.exists(posted_urls_file):
 
 # Load posted URLs from file
 with open(posted_urls_file, 'r') as f:
-    posted_urls = set(json.load(f))
+    try:
+        posted_urls = set(json.load(f))
+    except json.JSONDecodeError:
+        posted_urls = set()
 
 def fetch_latest_news():
     response = requests.get(news_api_url)
