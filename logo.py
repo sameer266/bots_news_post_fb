@@ -7,7 +7,7 @@ import time
 # Configuration
 news_api_key = os.getenv("NEWS_API_KEY")
 facebook_access_token = os.getenv("FACEBOOK_ACCESS_TOKEN")
-news_api_url = f"https://newsdata.io/api/1/news?apikey={news_api_key}&q=Nepal&country=np&language=en,ne&category=business,crime,education,politics,tourism"
+news_api_url = f"https://newsdata.io/api/1/news?apikey={news_api_key}&q=Nepal&country=np&language=en,ne&category=top"
 graph = fb.GraphAPI(facebook_access_token)
 posted_urls_file = 'posted_urls.json'
 
